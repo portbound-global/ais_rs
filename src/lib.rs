@@ -1,4 +1,4 @@
-mod nmea;
+pub mod nmea;
 mod decoder;
 mod errors;
 mod assembler;
