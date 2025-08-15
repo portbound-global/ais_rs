@@ -1,0 +1,1 @@
+// The main AIS decoder -> returns a struct with message data

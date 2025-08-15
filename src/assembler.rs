@@ -1,0 +1,1 @@
+// A struct implementation that allows for assembling multipart messages

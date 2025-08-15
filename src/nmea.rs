@@ -1,0 +1,1 @@
+// NMEA parsing utilities (checksums, sentence splitting)

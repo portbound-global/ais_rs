@@ -1,0 +1,1 @@
+// Error enum (checksum fail, malformed message, unsupported message)
