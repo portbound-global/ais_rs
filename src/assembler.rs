@@ -1,16 +1,15 @@
-use crate::errors::AisError;
+use crate::errors::AISError;
 use crate::models::{BuildSentence, NmeaSentence, PartialSentence};
 use crate::nmea;
-use std::collections::HashMap;
-use std::time::Instant;
+use std::{collections::HashMap, time::Instant};
 
-pub struct Assembler {
+pub struct MultipartAssembler {
     sentence_hashmap: HashMap<(u8, char), PartialSentence>,
 }
 
-impl Assembler {
+impl MultipartAssembler {
     pub fn new() -> Self {
-        Assembler {
+        MultipartAssembler {
             sentence_hashmap: HashMap::new(),
         }
     }
@@ -72,7 +71,7 @@ impl Assembler {
         None
     }
 
-    pub fn push(&mut self, sentence: &str) -> Result<Option<BuildSentence>, AisError> {
+    pub fn push(&mut self, sentence: &str) -> Result<Option<BuildSentence>, AISError> {
         let sentence = nmea::structurize_sentence(&sentence);
 
         match sentence {
@@ -94,5 +93,26 @@ impl Assembler {
             }
             Err(error) => Err(error),
         }
+    }
+}
+
+pub fn single_part_assembler(sentence: &str) -> Result<Option<BuildSentence>, AISError> {
+    let sentence = nmea::structurize_sentence(&sentence)?;
+
+    if sentence.total_sentences == 1 {
+        let build_sentence = BuildSentence {
+            talker: sentence.talker,
+            channel: sentence.channel,
+            payload: sentence.payload,
+            fill_bits: sentence.fill_bits,
+            timestamp: Instant::now(),
+        };
+
+        Ok(Some(build_sentence))
+    } else {
+        Err(AISError::IsMultipartSentence {
+            current_part: sentence.sentence_number,
+            total_parts: sentence.total_sentences,
+        })
     }
 }
