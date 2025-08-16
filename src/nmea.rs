@@ -36,49 +36,57 @@ fn validate_and_strip_checksum(sentence: &str) -> Result<&str, AisError> {
 pub fn structurize_sentence(sentence: &str) -> Result<NmeaSentence, AisError> {
     let data = validate_and_strip_checksum(sentence)?;
 
-    let fields: Vec<&str> = data.split(FIELD_DELIMITER).collect();
+    let mut fields = data.splitn(MIN_FIELD_COUNT, FIELD_DELIMITER);
 
-    if fields.len() < MIN_FIELD_COUNT {
-        return Err(AisError::MalformedSentence(
-            "Sentence is missing Fields".to_string(),
-        ));
-    }
+    let talker = fields.next().unwrap_or_default().to_string();
 
-    // Start parsing the fields into variables with error handling.
-    let talker = fields[0].to_string();
+    let total_sentences: u8 = fields
+        .next()
+        .ok_or_else(|| AisError::MalformedSentence("Missing total_sentences".into()))?
+        .parse()
+        .map_err(|_| AisError::TypeConversion {
+            field: "total_sentences".into(),
+            value: fields.clone().next().unwrap_or_default().to_string(),
+        })?;
 
-    let total_sentences = fields[1].parse().map_err(|_| AisError::TypeConversion {
-        field: "total_sentences".to_string(),
-        value: fields[1].to_string(),
-    })?;
+    let sentence_number: u8 = fields
+        .next()
+        .ok_or_else(|| AisError::MalformedSentence("Missing sentence_number".into()))?
+        .parse()
+        .map_err(|_| AisError::TypeConversion {
+            field: "sentence_number".into(),
+            value: fields.clone().next().unwrap_or_default().to_string(),
+        })?;
 
-    let sentence_number = fields[2].parse().map_err(|_| AisError::TypeConversion {
-        field: "sentence_number".to_string(),
-        value: fields[2].to_string(),
-    })?;
+    let sentence_id: Option<u8> = fields.next().and_then(|s| s.parse().ok());
 
-    let sentence_id = fields[3].parse().ok();
+    let channel = fields
+        .next()
+        .and_then(|s| s.chars().next())
+        .ok_or_else(|| AisError::TypeConversion {
+            field: "channel".into(),
+            value: "".into(),
+        })?;
 
-    let channel = fields[4].chars().next().ok_or(AisError::TypeConversion {
-        field: "channel".to_string(),
-        value: fields[4].to_string(),
-    })?;
+    let payload = fields
+        .next()
+        .ok_or_else(|| AisError::MalformedSentence("Missing payload".into()))?
+        .to_string();
 
-    let payload = fields[5].to_string();
+    let fill_bits: u8 = fields
+        .next()
+        .ok_or_else(|| AisError::MalformedSentence("Missing fill_bits".into()))?
+        .parse()
+        .map_err(|_| AisError::TypeConversion {
+            field: "fill_bits".into(),
+            value: "".into(),
+        })?;
 
-    let fill_bits = fields[6].parse().map_err(|_| AisError::TypeConversion {
-        field: "fill_bits".to_string(),
-        value: fields[6].to_string(),
-    })?;
-
-    // Last check if the sentence number is correct.
     if sentence_number == 0 || sentence_number > total_sentences {
-        let error_message = format!(
+        return Err(AisError::MalformedSentence(format!(
             "sentence_number ({}) out of range for total_sentences ({})",
             sentence_number, total_sentences
-        );
-
-        return Err(AisError::MalformedSentence(error_message));
+        )));
     }
 
     Ok(NmeaSentence {
