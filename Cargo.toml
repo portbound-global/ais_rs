@@ -9,9 +9,9 @@ edition = "2024"
 criterion = "0.7.0"
 
 [[bench]]
-name = "assembler"
+name = "multipart_decoding"
 harness = false
 
 [[bench]]
-name = "structurize"
+name = "single_part_decoding"
 harness = false

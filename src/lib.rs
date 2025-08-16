@@ -1,6 +1,6 @@
 pub mod assembler;
-mod decoder;
+pub mod decoder;
 pub mod errors;
-mod message_types;
+mod individual_decoders;
 pub mod models;
 pub mod nmea;

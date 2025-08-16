@@ -10,7 +10,7 @@ pub struct NmeaSentence {
     pub sentence_id: Option<u8>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct BuildSentence {
     pub payload: String,
     pub talker: String,
@@ -26,4 +26,39 @@ pub struct PartialSentence {
     pub fill_bits: u8,
     pub payload_len: u8,
     pub available: bool,
+}
+
+#[derive(Debug)]
+pub enum AISMessage {
+    Position(AISPositionClassA),
+    Static(AISStaticData),
+    Unknown(u8), // for unsupported or malformed
+}
+
+#[derive(Debug)]
+pub struct AISPositionClassA {
+    pub message_type: u8,
+    pub repeat_indicator: u8,
+    pub mmsi: u32,
+    pub navigation_status: u8,
+    pub rate_of_turn: i8,
+    pub speed_over_ground: f32,
+    pub position_accuracy: bool,
+    pub longitude: f32,
+    pub latitude: f32,
+    pub course_over_ground: f32,
+    pub true_heading: u16,
+}
+
+#[derive(Debug)]
+pub struct AISStaticData {
+    pub mmsi: u32,
+    pub imo: u32,
+    pub call_sign: String,
+    pub vessel_name: String,
+    pub ship_type: u8,
+    pub dimension_to_bow: u16,
+    pub dimension_to_stern: u16,
+    pub dimension_to_port: u8,
+    pub dimension_to_starboard: u8,
 }
