@@ -12,7 +12,9 @@ pub fn position_class_a(bits: Vec<u8>, message_type: u8) -> AISPositionClassA {
         position_accuracy: get(&bits, BitField { start: 60, len: 1 }),
         longitude: get::<f32>(&bits, BitField { start: 61, len: 28 }) / 600000.0,
         latitude: get::<f32>(&bits, BitField { start: 89, len: 27 }) / 600000.0,
-        course_over_ground: 0.0,
-        true_heading: 0,
+        course_over_ground: get::<f32>(&bits, BitField { start: 116, len: 12 }) / 10.0,
+        true_heading: get(&bits, BitField { start: 128, len: 9 }),
+        time_stamp: get(&bits, BitField { start: 137, len: 6 }),
+        maneuver_indicator: get(&bits, BitField { start: 143, len: 2 }),
     }
 }

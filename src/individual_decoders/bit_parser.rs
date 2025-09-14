@@ -33,6 +33,11 @@ impl ValueFromBits for bool {
         bit_to_usize_helper(bits) == 1
     }
 }
+impl ValueFromBits for usize {
+    fn from_bits(bits: &[u8]) -> Self {
+        bit_to_usize_helper(bits)
+    }
+}
 
 impl ValueFromBits for u32 {
     fn from_bits(bits: &[u8]) -> Self {

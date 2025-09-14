@@ -47,18 +47,25 @@ pub struct AISPositionClassA {
     pub longitude: f32,
     pub latitude: f32,
     pub course_over_ground: f32,
-    pub true_heading: u16,
+    pub true_heading: usize,
+    pub time_stamp: usize,
+    pub maneuver_indicator: u8,
 }
 
 #[derive(Debug)]
 pub struct AISStaticData {
+    pub message_type: u8,
+    pub repeat_indicator: u8,
     pub mmsi: u32,
     pub imo: u32,
     pub call_sign: String,
     pub vessel_name: String,
-    pub ship_type: u8,
-    pub dimension_to_bow: u16,
-    pub dimension_to_stern: u16,
-    pub dimension_to_port: u8,
-    pub dimension_to_starboard: u8,
+    pub ship_type: usize,
+    pub dimension_to_bow: usize,
+    pub dimension_to_stern: usize,
+    pub dimension_to_port: usize,
+    pub dimension_to_starboard: usize,
+
+    pub draught: f32,
+    pub destination: String,
 }

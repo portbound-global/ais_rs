@@ -1,23 +1,32 @@
 #[cfg(test)]
 mod tests {
+    use std::fs::read_to_string;
     use ais_rs::assembler::{single_part_assembler, MultipartAssembler};
     use ais_rs::decoder::decode_ais_sentence;
+    use ais_rs::models::{AISMessage};
 
-    const SIGNALS: [&str; 3] = [
-        "!AIVDM,1,1,,A,13`mgEP0000A0CRML>1GjWSn0@0W,0*65",
-        "!AIVDM,2,1,2,A,59NSJ@p2=vcPCDI;V20<PU5DU@61A84@E:22221?H0DG75e<0F3S5S2H,0*1B",
-        "!AIVDM,2,2,2,A,888888888888880,2*26",
+    const SIGNALS: [&str; 1] = [
+        "!AIVDM,1,1,,A,402;2L1vVCe2DP8NCdM:aNk02@;p,0*2F",
     ];
 
     #[test]
     fn decode() {
         let mut assembler = MultipartAssembler::new();
 
-        for signal in SIGNALS {
+        let signals = read_to_string("./ais.log").unwrap();
+
+        for signal in signals.split('\n') {
             let assembled_msg = assembler.push(signal);
 
             if let Some(message) = decode_ais_sentence(assembled_msg, Some(signal)) {
-                println!("{:#?}", message)
+                match message {
+                    AISMessage::Position(message) => {
+                    }
+                    AISMessage::Static(message) => {
+                        println!("{:#?}", message.destination);
+                    }
+                    _ => {}
+                }
             }
         }
     }
