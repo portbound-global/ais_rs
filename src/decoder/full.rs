@@ -1,8 +1,8 @@
 use crate::errors::AISError;
-use crate::individual_decoders::bit_parser;
-use crate::individual_decoders::bit_parser::BitField;
-use crate::individual_decoders::position_class_a::position_class_a;
-use crate::individual_decoders::static_data::static_data;
+use crate::parser::bit_parser;
+use crate::parser::bit_parser::BitField;
+use crate::parser::position_class_a::position_class_a;
+use crate::parser::static_data::static_data;
 use crate::log_error_sentence;
 use crate::models::{AISMessage, BuildSentence};
 
@@ -10,10 +10,11 @@ pub fn decode_ais_sentence(
     assembled_msg: Result<Option<BuildSentence>, AISError>,
     signal: Option<&str>,
 ) -> Option<AISMessage> {
+
     match assembled_msg {
         Ok(msg) => {
             if let Some(message) = msg {
-                return Some(decode(message));
+                return decode(message)
             };
             None
         }
@@ -26,7 +27,7 @@ pub fn decode_ais_sentence(
     }
 }
 
-fn decode(sentence: BuildSentence) -> AISMessage {
+fn decode(sentence: BuildSentence) -> Option<AISMessage> {
     let payload = sentence.payload;
 
     let mut bits_vector = Vec::with_capacity(payload.len() * 6);
@@ -46,12 +47,12 @@ fn decode(sentence: BuildSentence) -> AISMessage {
     match msg_type {
         1 | 2 | 3 => {
             let decoded_message = position_class_a(bits_vector, msg_type);
-            AISMessage::Position(decoded_message)
+            Some(AISMessage::Position(decoded_message))
         }
         5 => {
             let decoded_message = static_data(bits_vector, msg_type);
-            AISMessage::Static(decoded_message)
+            Some(AISMessage::Static(decoded_message))
         }
-        _ => AISMessage::Unknown(msg_type),
+        _ => Some(AISMessage::Unknown(msg_type))
     }
 }

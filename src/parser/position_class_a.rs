@@ -1,4 +1,4 @@
-use crate::individual_decoders::bit_parser::{get, BitField};
+use crate::parser::bit_parser::{get, BitField};
 use crate::models::AISPositionClassA;
 
 pub fn position_class_a(bits: Vec<u8>, message_type: u8) -> AISPositionClassA {

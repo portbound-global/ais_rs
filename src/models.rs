@@ -34,6 +34,24 @@ pub enum AISMessage {
     Static(AISStaticData),
     Unknown(u8), // for unsupported or malformed
 }
+#[derive(Debug)]
+pub enum AISPartial {
+    Position(AISPartialPositionClassA),
+    Static(AISPartialStaticData),
+    Unknown(u8), // for unsupported or malformed
+}
+
+#[derive(Debug)]
+pub struct AISPartialPositionClassA {
+    pub mmsi: u32,
+}
+
+#[derive(Debug)]
+pub struct AISPartialStaticData {
+    pub mmsi: u32,
+    pub imo: u32,
+    pub ship_type: usize,
+}
 
 #[derive(Debug)]
 pub struct AISPositionClassA {
@@ -65,7 +83,6 @@ pub struct AISStaticData {
     pub dimension_to_stern: usize,
     pub dimension_to_port: usize,
     pub dimension_to_starboard: usize,
-
     pub draught: f32,
     pub destination: String,
 }

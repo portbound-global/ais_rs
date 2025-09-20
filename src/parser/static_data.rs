@@ -1,4 +1,4 @@
-use crate::individual_decoders::bit_parser::{get, BitField};
+use crate::parser::bit_parser::{get, BitField};
 use crate::models::AISStaticData;
 
 pub fn static_data(bits: Vec<u8>, message_type: u8) -> AISStaticData {

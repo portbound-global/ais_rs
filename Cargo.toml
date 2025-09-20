@@ -9,9 +9,9 @@ edition = "2024"
 criterion = "0.7.0"
 
 [[bench]]
-name = "multipart_decoding"
+name = "full_decoding"
 harness = false
 
 [[bench]]
-name = "single_part_decoding"
+name = "partial_decoding"
 harness = false

@@ -10,6 +10,7 @@ macro_rules! log_error_sentence {
     };
 }
 
+#[derive(Debug, Clone)]
 pub enum AISError {
     MalformedSentence(String),
     TypeConversion { field: String, value: String },

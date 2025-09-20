@@ -1,22 +1,21 @@
 #[cfg(test)]
 mod tests {
     use std::fs::read_to_string;
-    use ais_rs::assembler::{single_part_assembler, MultipartAssembler};
-    use ais_rs::decoder::decode_ais_sentence;
-    use ais_rs::models::{AISMessage};
-
-    const SIGNALS: [&str; 1] = [
-        "!AIVDM,1,1,,A,402;2L1vVCe2DP8NCdM:aNk02@;p,0*2F",
-    ];
+    use ais_rs::assembler::{MultipartAssembler};
+    use ais_rs::decoder::full::decode_ais_sentence;
+    use ais_rs::decoder::partial::decode_partial_ais_sentence;
+    use ais_rs::models::{AISMessage, AISPartial};
 
     #[test]
-    fn decode() {
+    fn decode_full() {
         let mut assembler = MultipartAssembler::new();
 
         let signals = read_to_string("./ais.log").unwrap();
 
         for signal in signals.split('\n') {
             let assembled_msg = assembler.push(signal);
+
+            // decode_partial_ais_sentence(assembled_msg, Some(signal));
 
             if let Some(message) = decode_ais_sentence(assembled_msg, Some(signal)) {
                 match message {
@@ -32,19 +31,59 @@ mod tests {
     }
 
     #[test]
-    fn decode_single() {
-        let signal = SIGNALS[0];
+    fn decode_partial() {
+        let mut assembler = MultipartAssembler::new();
 
-        let assembled_msg = single_part_assembler(signal);
+        let signals = read_to_string("./ais.log").unwrap();
 
-        assert!(assembled_msg.is_ok());
+        for signal in signals.split('\n') {
+            let assembled_msg = assembler.push(signal);
 
-        let decoded = decode_ais_sentence(assembled_msg, Some(signal));
+            if let Some(message) = decode_partial_ais_sentence(assembled_msg, Some(signal)) {
+                match message {
+                    AISPartial::Position(message) => {
+                        // println!("{:#?}", message);
+                    }
+                    AISPartial::Static(message) => {
+                        println!("{:#?}", message);
+                    }
+                    _ => {}
+                }
+            }
+        }
+    }
 
-        assert!(decoded.is_some());
+    #[test]
+    fn decode() {
+        let mut assembler = MultipartAssembler::new();
 
-        if let Some(message) = decoded {
-            println!("{:#?}", message);
+        let signals = read_to_string("./ais.log").unwrap();
+        for signal in signals.split('\n') {
+            let assembled_msg = assembler.push(signal);
+
+            let full_message = decode_ais_sentence(assembled_msg.clone(), Some(signal));
+            let partial_message = decode_partial_ais_sentence(assembled_msg, Some(signal));
+
+            match (full_message, partial_message) {
+                (Some(full), Some(partial)) => {
+
+                    match (full, partial) {
+                        (AISMessage::Static(full), AISPartial::Static(partial)) => {
+                            assert_eq!(full.mmsi, partial.mmsi);
+                            assert_eq!(full.imo, partial.imo);
+                            assert_eq!(full.ship_type, partial.ship_type);
+
+                            println!("Partial and fully decoded messages match: (MMSI: {})", full.mmsi);
+                        }
+                        (AISMessage::Position(full), AISPartial::Position(partial)) => {
+                            assert_eq!(full.mmsi, partial.mmsi);
+                            println!("Partial and fully decoded messages match: (MMSI: {})", full.mmsi);
+                        }
+                        (_, _) => {}
+                    }
+                }
+                _ => {}
+            }
         }
     }
 }
