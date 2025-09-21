@@ -28,7 +28,7 @@ fn validate_and_strip_checksum(sentence: &str) -> Result<&str, AISError> {
     } else {
         Err(AISError::InvalidChecksum {
             expected: expected_checksum,
-            found: calculated_checksum,
+            calculated: calculated_checksum,
         })
     }
 }

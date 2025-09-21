@@ -1,3 +1,4 @@
+#[allow(dead_code)]
 enum ShipType {
     NotAvailable,
     Reserved,
@@ -61,7 +62,7 @@ enum ShipType {
     OtherTypeNoAdditionalInfo,
 }
 
-
+#[allow(dead_code)]
 fn get_ship_type(code: u8) -> ShipType {
     match code {
         1..=19 => ShipType::Reserved,

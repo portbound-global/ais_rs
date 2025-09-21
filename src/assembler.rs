@@ -96,7 +96,7 @@ impl MultipartAssembler {
     }
 }
 
-pub fn single_part_assembler(sentence: &str) -> Result<Option<BuildSentence>, AISError> {
+pub fn single_part_assembler(sentence: &str) -> Result<BuildSentence, AISError> {
     let sentence = nmea::structurize_sentence(&sentence)?;
 
     if sentence.total_sentences == 1 {
@@ -108,7 +108,7 @@ pub fn single_part_assembler(sentence: &str) -> Result<Option<BuildSentence>, AI
             timestamp: Instant::now(),
         };
 
-        Ok(Some(build_sentence))
+        Ok(build_sentence)
     } else {
         Err(AISError::IsMultipartSentence {
             current_part: sentence.sentence_number,

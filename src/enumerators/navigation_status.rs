@@ -1,3 +1,4 @@
+#[allow(dead_code)]
 enum NavigationStatus {
     UnderwayUsingEngine,
     AtAnchor,
@@ -17,6 +18,7 @@ enum NavigationStatus {
     Undefined
 }
 
+#[allow(dead_code)]
 fn get_navigation_status(code: u8) -> NavigationStatus {
     match code {
         0 => NavigationStatus::UnderwayUsingEngine,

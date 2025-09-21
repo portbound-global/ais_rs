@@ -14,7 +14,7 @@ macro_rules! log_error_sentence {
 pub enum AISError {
     MalformedSentence(String),
     TypeConversion { field: String, value: String },
-    InvalidChecksum { expected: u8, found: u8 },
+    InvalidChecksum { expected: u8, calculated: u8 },
     IsMultipartSentence { current_part: u8, total_parts: u8 },
 }
 
@@ -25,11 +25,11 @@ impl fmt::Display for AISError {
             AISError::TypeConversion { field, value } => {
                 write!(f, "Failed to convert field {} with value {}", field, value)
             }
-            AISError::InvalidChecksum { expected, found } => {
+            AISError::InvalidChecksum { expected, calculated } => {
                 write!(
                     f,
-                    "Invalid checksum: expected {:X}, found {:X}",
-                    expected, found
+                    "Invalid checksum: found {:X}, calculated {:X}",
+                    expected, calculated
                 )
             }
             AISError::IsMultipartSentence {
