@@ -8,6 +8,7 @@ mod tests {
 
     #[test]
     fn decode_full() {
+        let mut found_destinations:Vec<String> = Vec::new();
         let mut assembler = MultipartAssembler::new();
 
         let signals = read_to_string("./ais.log").unwrap();
@@ -15,14 +16,16 @@ mod tests {
         for signal in signals.split('\n') {
             let assembled_msg = assembler.push(signal);
 
-            // decode_partial_ais_sentence(assembled_msg, Some(signal));
-
             if let Some(message) = decode_ais_sentence(assembled_msg, Some(signal)) {
                 match message {
-                    AISMessage::Position(message) => {
-                    }
+                    // AISMessage::Position(message) => {}
                     AISMessage::Static(message) => {
-                        println!("{:#?}", message.destination);
+                        let destination = message.destination.to_lowercase();
+
+                        if !found_destinations.contains(&destination) {
+                            println!("{}", destination);
+                            found_destinations.push(destination);
+                        }
                     }
                     _ => {}
                 }
