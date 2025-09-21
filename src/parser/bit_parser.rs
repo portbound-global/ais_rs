@@ -50,6 +50,13 @@ impl ValueFromBits for u8 {
         bit_to_usize_helper(bits) as u8
     }
 }
+
+impl ValueFromBits for u16 {
+    fn from_bits(bits: &[u8]) -> Self {
+        bit_to_usize_helper(bits) as u16
+    }
+}
+
 impl ValueFromBits for i8 {
     fn from_bits(bits: &[u8]) -> Self {
         bit_to_usize_helper(bits) as i8

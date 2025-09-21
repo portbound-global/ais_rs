@@ -50,7 +50,7 @@ pub struct AISPartialPositionClassA {
 pub struct AISPartialStaticData {
     pub mmsi: u32,
     pub imo: u32,
-    pub ship_type: usize,
+    pub ship_type: u16,
 }
 
 #[derive(Debug)]
@@ -78,11 +78,11 @@ pub struct AISStaticData {
     pub imo: u32,
     pub call_sign: String,
     pub vessel_name: String,
-    pub ship_type: usize,
-    pub dimension_to_bow: usize,
-    pub dimension_to_stern: usize,
-    pub dimension_to_port: usize,
-    pub dimension_to_starboard: usize,
+    pub ship_type: u16,
+    pub dimension_to_bow: u16,
+    pub dimension_to_stern: u16,
+    pub dimension_to_port: u16,
+    pub dimension_to_starboard: u16,
     pub draught: f32,
     pub destination: String,
 }
