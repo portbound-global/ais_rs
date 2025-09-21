@@ -4,4 +4,4 @@ mod parser;
 pub mod models;
 pub mod nmea;
 pub mod decoder;
-mod enumerators;
+pub mod enumerators;

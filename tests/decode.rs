@@ -23,10 +23,10 @@ mod tests {
             if let Some(message) = assembled_msg {
                 match message.decode() {
                     AISMessage::Position(message) => {
-                        println!("{:#?}", message);
+                        // println!("{:?}", message.navigation_status_text());
                     }
                     AISMessage::Static(message) => {
-                        println!("{:#?}", message);
+                        println!("{:?}", message.ship_type_text());
                     }
                     _ => {}
                 }

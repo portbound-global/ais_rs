@@ -1,5 +1,7 @@
-#[allow(dead_code)]
-enum NavigationStatus {
+use crate::models::{AISPositionClassA};
+
+#[derive(Debug)]
+pub enum NavigationStatus {
     UnderwayUsingEngine,
     AtAnchor,
     NotUnderCommand,
@@ -18,9 +20,15 @@ enum NavigationStatus {
     Undefined
 }
 
-#[allow(dead_code)]
-fn get_navigation_status(code: u8) -> NavigationStatus {
-    match code {
+impl AISPositionClassA {
+    #[inline(always)]
+    pub fn navigation_status_text(&self) -> NavigationStatus {
+        navigation_status_text(self.navigation_status)
+    }
+}
+
+pub fn navigation_status_text(navigation_status: u8) -> NavigationStatus {
+    match navigation_status {
         0 => NavigationStatus::UnderwayUsingEngine,
         1 => NavigationStatus::AtAnchor,
         2 => NavigationStatus::NotUnderCommand,

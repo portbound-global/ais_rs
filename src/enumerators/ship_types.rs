@@ -1,5 +1,7 @@
-#[allow(dead_code)]
-enum ShipType {
+use crate::models::AISStaticData;
+
+#[derive(Debug)]
+pub enum ShipType {
     NotAvailable,
     Reserved,
     WingInGroundAllTypes,
@@ -62,9 +64,15 @@ enum ShipType {
     OtherTypeNoAdditionalInfo,
 }
 
-#[allow(dead_code)]
-fn get_ship_type(code: u8) -> ShipType {
-    match code {
+impl AISStaticData {
+    #[inline(always)]
+    pub fn ship_type_text(&self) -> ShipType {
+        ship_type_text(self.ship_type)
+    }
+}
+
+pub fn ship_type_text(ship_type: u8) -> ShipType {
+    match ship_type {
         1..=19 => ShipType::Reserved,
         20 => ShipType::WingInGroundAllTypes,
         21 => ShipType::WingInGroundHazardousA,
