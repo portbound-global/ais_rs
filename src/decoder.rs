@@ -7,7 +7,9 @@ impl BuildSentence {
     fn payload_to_bit_vector(&self, take_amount: usize) -> Vec<u8> {
         let chars = self.payload.chars();
 
-        let mut bits_vector:Vec<u8> = Vec::with_capacity(take_amount * 6);
+        let capacity = (take_amount * 6) + self.fill_bits as usize;
+
+        let mut bits_vector:Vec<u8> = Vec::with_capacity(capacity);
 
         for char in chars.take(take_amount) {
             let mut value = char as u8;
@@ -17,6 +19,10 @@ impl BuildSentence {
             for i in (0..6).rev() {
                 bits_vector.push((value >> i) & 1);
             }
+        }
+
+        for _ in 0..self.fill_bits {
+            bits_vector.push(0);
         }
 
         bits_vector
