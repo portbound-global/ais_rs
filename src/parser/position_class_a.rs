@@ -1,8 +1,8 @@
 use crate::parser::bit_parser::{get, BitField};
-use crate::models::AISPositionClassA;
+use crate::models::PositionClassA;
 
-pub fn position_class_a(bits: Vec<u8>, message_type: u8) -> AISPositionClassA {
-    AISPositionClassA {
+pub fn position_class_a(bits: Vec<u8>, message_type: u8) -> PositionClassA {
+    PositionClassA {
         message_type,
         repeat_indicator: get(&bits, BitField { start: 6, len: 2 }),
         mmsi: get(&bits, BitField { start: 8, len: 30 }),

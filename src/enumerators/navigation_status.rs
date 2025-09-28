@@ -1,4 +1,4 @@
-use crate::models::{AISPositionClassA};
+use crate::models::{PositionClassA};
 
 #[derive(Debug)]
 pub enum NavigationStatus {
@@ -20,7 +20,7 @@ pub enum NavigationStatus {
     Undefined
 }
 
-impl AISPositionClassA {
+impl PositionClassA {
     #[inline(always)]
     pub fn navigation_status_text(&self) -> NavigationStatus {
         navigation_status_text(self.navigation_status)

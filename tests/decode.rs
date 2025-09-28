@@ -22,12 +22,12 @@ mod tests {
 
             if let Some(message) = assembled_msg {
                 match message.decode() {
-                    AISMessage::Position(message) => {
-                        // println!("{:?}", message.navigation_status_text());
+                    AISMessage::NotN(message) => {
+                        println!("{:?}", message);
                     }
-                    AISMessage::Static(message) => {
-                        println!("{:?}", message.ship_type_text());
-                    }
+                    // AISMessage::Static(message) => {
+                    //     println!("{:?}", message.ship_type_text());
+                    // }
                     _ => {}
                 }
             }

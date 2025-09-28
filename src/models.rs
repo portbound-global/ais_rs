@@ -30,31 +30,33 @@ pub struct PartialSentence {
 
 #[derive(Debug)]
 pub enum AISMessage {
-    Position(AISPositionClassA),
-    Static(AISStaticData),
+    Position(PositionClassA),
+    Static(StaticData),
+    NotN(NoTN),
     Unknown(u8), // for unsupported or malformed
 }
 #[derive(Debug)]
 pub enum AISPartial {
-    Position(AISPartialPositionClassA),
-    Static(AISPartialStaticData),
+    Position(PartialPositionClassA),
+    Static(PartialStaticData),
+    NotN(NoTN),
     Unknown(u8), // for unsupported or malformed
 }
 
 #[derive(Debug)]
-pub struct AISPartialPositionClassA {
+pub struct PartialPositionClassA {
     pub mmsi: u32,
 }
 
 #[derive(Debug)]
-pub struct AISPartialStaticData {
+pub struct PartialStaticData {
     pub mmsi: u32,
     pub imo: u32,
     pub ship_type: u8,
 }
 
 #[derive(Debug)]
-pub struct AISPositionClassA {
+pub struct PositionClassA {
     pub message_type: u8,
     pub repeat_indicator: u8,
     pub mmsi: u32,
@@ -71,7 +73,7 @@ pub struct AISPositionClassA {
 }
 
 #[derive(Debug)]
-pub struct AISStaticData {
+pub struct StaticData {
     pub message_type: u8,
     pub repeat_indicator: u8,
     pub mmsi: u32,
@@ -85,4 +87,30 @@ pub struct AISStaticData {
     pub dimension_to_starboard: u16,
     pub draught: f32,
     pub destination: String,
+}
+
+#[derive(Debug)]
+pub struct NoTN {
+    pub message_type: u8,
+    pub repeat_indicator: u8,
+    pub mmsi: u32,
+    pub aid_type: u8,
+    pub aid_name: String,
+    pub position_accuracy: bool,
+    pub longitude: f32,
+    pub latitude: f32,
+    pub dimension_to_bow: u16,
+    pub dimension_to_stern: u16,
+    pub dimension_to_port: u16,
+    pub dimension_to_starboard: u16,
+    pub epfd: u8,
+    pub time_stamp: u8,
+    pub off_position: bool,
+    pub regional_reserved: u16,
+    pub raim_flag: bool,
+    pub virtual_aid: bool,
+    pub assigned_mode: bool,
+    pub spare: bool,
+    pub name_extension: String,
+    
 }

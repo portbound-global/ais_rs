@@ -1,4 +1,4 @@
-use crate::models::AISStaticData;
+use crate::models::StaticData;
 
 #[derive(Debug)]
 pub enum ShipType {
@@ -64,7 +64,7 @@ pub enum ShipType {
     OtherTypeNoAdditionalInfo,
 }
 
-impl AISStaticData {
+impl StaticData {
     #[inline(always)]
     pub fn ship_type_text(&self) -> ShipType {
         ship_type_text(self.ship_type)

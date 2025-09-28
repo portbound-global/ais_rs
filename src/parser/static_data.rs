@@ -1,8 +1,8 @@
 use crate::parser::bit_parser::{get, BitField};
-use crate::models::AISStaticData;
+use crate::models::StaticData;
 
-pub fn static_data(bits: Vec<u8>, message_type: u8) -> AISStaticData {
-    AISStaticData {
+pub fn static_data(bits: Vec<u8>, message_type: u8) -> StaticData {
+    StaticData {
         message_type,
         repeat_indicator: get(&bits, BitField { start: 6, len: 2 }),
         mmsi: get(&bits, BitField { start: 8, len: 30 }),

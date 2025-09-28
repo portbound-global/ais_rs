@@ -1,4 +1,5 @@
-use crate::models::{AISMessage, AISPartial, AISPartialPositionClassA, AISPartialStaticData, BuildSentence};
+use crate::models::{AISMessage, AISPartial, PartialPositionClassA, PartialStaticData, BuildSentence};
+use crate::parser::aid_to_navigation::aid_to_navigation;
 use crate::parser::bit_parser::{get, BitField};
 use crate::parser::position_class_a::position_class_a;
 use crate::parser::static_data::static_data;
@@ -43,6 +44,10 @@ impl BuildSentence {
                 let decoded_message = static_data(bits_vector, msg_type);
                 AISMessage::Static(decoded_message)
             }
+            21 => {
+                let decoded_message = aid_to_navigation(bits_vector, msg_type);
+                AISMessage::NotN(decoded_message)
+            }
             _ => AISMessage::Unknown(msg_type)
         }
     }
@@ -59,7 +64,7 @@ impl BuildSentence {
                 1 | 2 | 3 => {
                     let bit_vector = self.payload_to_bit_vector(7);
 
-                    let decoded_message = AISPartialPositionClassA {
+                    let decoded_message = PartialPositionClassA {
                         mmsi: get(&bit_vector, BitField { start: 8, len: 30 }),
                     };
 
@@ -68,7 +73,7 @@ impl BuildSentence {
                 5 => {
                     let bit_vector = self.payload_to_bit_vector(40);
 
-                    let decoded_message = AISPartialStaticData {
+                    let decoded_message = PartialStaticData {
                         mmsi: get(&bit_vector, BitField { start: 8, len: 30 }),
                         imo: get(&bit_vector, BitField { start: 40, len: 30 }),
                         ship_type: get(&bit_vector, BitField { start: 232, len: 8 }),
